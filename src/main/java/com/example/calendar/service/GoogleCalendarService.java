@@ -16,8 +16,8 @@ import java.util.Collections;
 @Service
 public class GoogleCalendarService {
     private static final String APPLICATION_NAME = "Blessed7 PoC";
-    private static final String CREDENTIALS = "src/main/resources";
-    private static final String CALENDAR_ID = "email";
+    private static final String CREDENTIALS = "src/main/resources/blessed7-poc-93832ce87e38.json";
+    private static final String CALENDAR_ID = "";
 
     private Calendar getCalendarService() throws Exception{
         GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(CREDENTIALS))
@@ -40,7 +40,7 @@ public class GoogleCalendarService {
 
         com.google.api.client.util.DateTime endDateTime = new com.google.api.client.util.DateTime(fim);
         EventDateTime end = new EventDateTime().setDateTime(endDateTime);
-        event.setStart(end);
+        event.setEnd(end);
 
         event = service.events().insert(CALENDAR_ID, event).execute();
 

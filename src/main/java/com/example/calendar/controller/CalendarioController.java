@@ -1,49 +1,30 @@
 package com.example.calendar.controller;
 
+import com.example.calendar.dto.EventRequestDTO;
+import com.example.calendar.service.GoogleCalendarService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/calendario")
 public class CalendarioController {
-    private String titulo;
-    private String descricao;
-    private String dataHoraInicio;
-    private String dataHoraFim;
-    private String emailProfissional;
+    private final GoogleCalendarService calendarService;
 
-    public String getTitulo() {
-        return titulo;
+    public CalendarioController(GoogleCalendarService calendarService) {
+        this.calendarService = calendarService;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getDataHoraInicio() {
-        return dataHoraInicio;
-    }
-
-    public void setDataHoraInicio(String dataHoraInicio) {
-        this.dataHoraInicio = dataHoraInicio;
-    }
-
-    public String getDataHoraFim() {
-        return dataHoraFim;
-    }
-
-    public void setDataHoraFim(String dataHoraFim) {
-        this.dataHoraFim = dataHoraFim;
-    }
-
-    public String getEmailProfissional() {
-        return emailProfissional;
-    }
-
-    public void setEmailProfissional(String emailProfissional) {
-        this.emailProfissional = emailProfissional;
+    @PostMapping("/agendar")
+    public ResponseEntity<String> criarAgendamento(@RequestBody EventRequestDTO request){
+        try{
+            String link = calendarService.criarEvento(request.getTitulo(), request.getDescricao(), request.getDataHoraInicio(),
+                    request.getDataHoraFim());
+            return ResponseEntity.status(200).body("Sucesso! Link do evento: " + link);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("Erro: " + e.getMessage());
+        }
     }
 }
