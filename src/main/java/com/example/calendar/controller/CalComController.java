@@ -1,24 +1,21 @@
 package com.example.calendar.controller;
 
-import com.example.calendar.dto.EventRequestDTO;
-import com.example.calendar.service.GoogleCalendarService;
+import com.example.calendar.dto.AttendeeDTO;
+import com.example.calendar.service.CalComService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/calendario")
-public class CalendarioController {
-    private final GoogleCalendarService calendarService;
+public class CalComController {
+    private final CalComService calendarService;
 
-    public CalendarioController(GoogleCalendarService calendarService) {
+    public CalComController(CalComService calendarService) {
         this.calendarService = calendarService;
     }
 
     @PostMapping("/agendar")
-    public ResponseEntity<String> criarAgendamento(@RequestBody EventRequestDTO request){
+    public ResponseEntity<String> criarAgendamento(@RequestBody AttendeeDTO request){
         try{
             String link = calendarService.criarEvento(request.getTitulo(), request.getDescricao(), request.getDataHoraInicio(),
                     request.getDataHoraFim());
