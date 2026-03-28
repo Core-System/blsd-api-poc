@@ -1,5 +1,6 @@
 package com.example.calendar.controller;
 
+import com.example.calendar.dto.AgendamentoRequestDTO;
 import com.example.calendar.dto.AttendeeDTO;
 import com.example.calendar.service.CalComService;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,10 @@ public class CalComController {
         this.calendarService = calendarService;
     }
 
-    @PostMapping("/agendar")
-    public ResponseEntity<String> criarAgendamento(@RequestBody AttendeeDTO request){
-        try{
-            String link = calendarService.criarEvento(request.getTitulo(), request.getDescricao(), request.getDataHoraInicio(),
-                    request.getDataHoraFim());
-            return ResponseEntity.status(200).body("Sucesso! Link do evento: " + link);
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body("Erro: " + e.getMessage());
-        }
+    @PostMapping("/calcom/agendar")
+    public ResponseEntity<String> agendar(@RequestBody AgendamentoRequestDTO request){
+        String resultado = calendarService.criarAgendamento(request.getNome(), request.getEmail(), request.getDataHoraInicio());
+
+        return ResponseEntity.ok(resultado);
     }
 }

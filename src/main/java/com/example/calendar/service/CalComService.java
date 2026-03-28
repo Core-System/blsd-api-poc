@@ -26,7 +26,7 @@ public class CalComService {
         cliente.setEmail(email);
 
         CalComRequisicaoDTO agendamento = new CalComRequisicaoDTO();
-        agendamento.setEventTypeId(5179222);
+        agendamento.setEventTypeId(5180374);
         agendamento.setStart(inicio);
         agendamento.setAttendee(cliente);
 

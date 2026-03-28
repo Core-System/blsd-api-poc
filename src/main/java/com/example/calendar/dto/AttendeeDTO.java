@@ -4,7 +4,7 @@ public class AttendeeDTO {
     private String name;
     private String email;
     private String timeZone = "America/Sao_Paulo";
-    private String language = "pt-br";
+    private String language = "pt-BR";
 
     public String getName() {
         return name;
