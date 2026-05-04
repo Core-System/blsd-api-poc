@@ -6,6 +6,7 @@ import com.example.calendar.service.CalComService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/calendario")
 public class CalComController {
