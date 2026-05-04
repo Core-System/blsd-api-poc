@@ -1,7 +1,10 @@
 package com.example.calendar.service;
 
+import com.example.calendar.config.NotificacaoCliente;
 import com.example.calendar.dto.AttendeeDTO;
 import com.example.calendar.dto.CalComRequisicaoDTO;
+import com.example.calendar.dto.NotificacaoEmailRequest;
+import com.example.calendar.dto.NotificacaoSmsWhatsappRequest;
 import com.example.calendar.entity.Cliente;
 import com.example.calendar.entity.Consulta;
 import com.example.calendar.repositories.ClienteRepository;
@@ -23,10 +26,12 @@ public class CalComService {
     private String apiKey;
     private final ConsultaRepository consultaRepository;
     private final ClienteRepository clienteRepository;
+    private final NotificacaoCliente notificacaoCliente;
 
-    public CalComService(ConsultaRepository consultaRepository, ClienteRepository clienteRepository) {
+    public CalComService(ConsultaRepository consultaRepository, ClienteRepository clienteRepository, NotificacaoCliente notificacaoCliente) {
         this.consultaRepository = consultaRepository;
         this.clienteRepository = clienteRepository;
+        this.notificacaoCliente = notificacaoCliente;
     }
 
     public String criarAgendamento(String nome, String email, String inicio) {
@@ -54,6 +59,8 @@ public class CalComService {
 
         ResponseEntity<String> response = restTemplate.postForEntity(endpoint, entity, String.class);
 
+
+
         if (response.getStatusCode().is2xxSuccessful()) {
             Cliente clienteEncontrado = clienteRepository.findByEmail(email);
 
@@ -63,6 +70,23 @@ public class CalComService {
                 consulta.setDataHoraFim(dataHoraFim);
                 consulta.setCliente(clienteEncontrado);
                 consultaRepository.save(consulta);
+
+                NotificacaoSmsWhatsappRequest requestSms = new NotificacaoSmsWhatsappRequest(
+                        "Sistema Blessed7",
+                        11,
+                        "989977147",
+                        "Olá, "+ clienteEncontrado.getNome() +", Seu agendamento foi realizado com sucesso!"
+                );
+
+                NotificacaoEmailRequest emailRequest = new NotificacaoEmailRequest(
+                        clienteEncontrado.getEmail(),
+                        "Agendamento no Studio site Blessed7",
+                        "Olá, "+ clienteEncontrado.getNome() +", Seu agendamento foi realizado com sucesso!"
+                );
+
+                notificacaoCliente.enviarSms(requestSms);
+                notificacaoCliente.enviarWhatsapp(requestSms);
+                notificacaoCliente.enviarEmail(emailRequest);
             } else {
                 System.out.println("Aviso: cliente com email " + email + " não encontrado no banco.");
             }
