@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Service
 public class CalComService {
@@ -47,7 +48,8 @@ public class CalComService {
         agendamento.setStart(inicio);
         agendamento.setAttendee(attendee);
 
-        LocalDateTime dataHoraInicio = LocalDateTime.parse(inicio);
+        ZonedDateTime zonedInicio = ZonedDateTime.parse(inicio);
+        LocalDateTime dataHoraInicio = zonedInicio.toLocalDateTime();
         LocalDateTime dataHoraFim = dataHoraInicio.plusMinutes(60);
 
         HttpHeaders headers = new HttpHeaders();
